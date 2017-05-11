@@ -2,30 +2,43 @@
 #include <iostream>
 #include <limits>
 
-Twiddle::Twiddle(double tol)
+using namespace std;
+
+Twiddle::Twiddle()
 {
-  tol_ = tol;
   best_err_ = std::numeric_limits<double>::max();
 }
 
 Twiddle::~Twiddle() {}
+
+void Twiddle::init(double Kp, double Ki, double Kd)
+{
+  p_[0] = Kp;
+  p_[1] = Ki;
+  p_[2] = Kd;
+  count = 0;
+}
+
 
 bool Twiddle::record(double cte)
 {
   err_ += cte * cte;
   ++count;
 
-  return count < 1000 && err_ < best_err_;
+  return count < 1500 && err_ < best_err_;
 }
 
 void Twiddle::update()
 {
+  err_ = err_ / count * 1500;
   if (status)
   {
     if (err_ < best_err_)
     {
       best_err_ = err_;
-      best_p_[index] = p_[index];
+      best_p_[0] = p_[0];
+      best_p_[1] = p_[1];
+      best_p_[2] = p_[2];
       dp_[index] *= 1.1;
     }
     else
@@ -40,7 +53,9 @@ void Twiddle::update()
     if (err_ < best_err_)
     {
       best_err_ = err_;
-      best_p_[index] = p_[index];
+      best_p_[0] = p_[0];
+      best_p_[1] = p_[1];
+      best_p_[2] = p_[2];
       dp_[index] *= 1.1;
     }
     else
@@ -53,13 +68,25 @@ void Twiddle::update()
   if (!status)
   {
     index = (++index) % 3;
+    // if (index == 1)
+    //   index = 2;
     p_[index] += dp_[index];
-    count = 0;
-    err_ = 0.0;
+    cout << endl << endl << endl;
+    cout << index << " " << p_[0] << " " << p_[1] << " " << p_[2] << endl;
+    cout << "  " << dp_[0] << " " << dp_[1] << " " << dp_[2] << endl;
+    cout << endl << endl;
   }
+
+  count = 0;
+  err_ = 0.0;
 }
 
-double* Twiddle::getBestP()
+double* Twiddle::getP()
 {
-  return best_p_;
+  return p_;
+}
+
+double Twiddle::sumOfDp()
+{
+  return dp_[0] + dp_[1] + dp_[2];
 }
