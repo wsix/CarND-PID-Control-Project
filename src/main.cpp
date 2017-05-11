@@ -2,6 +2,7 @@
 #include <iostream>
 #include "json.hpp"
 #include "PID.h"
+#include "Twiddle.h"
 #include <math.h>
 
 // for convenience
@@ -33,6 +34,7 @@ int main()
   uWS::Hub h;
 
   PID pid;
+  Twiddle twiddle(0.2);
   // TODO: Initialize the pid variable.
   pid.Init(0.1, 0, 0);
 
@@ -65,6 +67,9 @@ int main()
             steer_value = 1.0;
           if (steer_value < -1.0)
             steer_value = -1.0;
+
+          std::string reset_msg = "42[\"reset\", {}]";
+          ws.send(reset_msg.data(), reset_msg.length(), uWS::OpCode::TEXT);
 
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
