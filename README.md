@@ -29,7 +29,7 @@ Self-Driving Car Engineer Nanodegree Program
 
 ## Reflections
 
-In this project, I used one PID controller to control the steering angle. And proportional, integral and derivative hyperparameters were set to `0.119872, 0.0, 1.98053` with speed=70(`msgJson["throttle"] = 0.7`), which is tuned by Twiddle algorithm.
+In this project, I used one PID controller to control the steering angle. And proportional, integral and derivative hyperparameters were set to `0.19785, 0.0, 2.12295` with speed=70(`msgJson["throttle"] = 0.3`), which is tuned by Twiddle algorithm.
 
 - The P error term is proportional to cross-track error (CTE) term and in this project this error mainly control the steering angle. So the increasing weight `Kp` increases the steering angle and enables the vehicle to better follows to sharp turns. But when `Kp` is too large, the car will oscillate around the target trajectory.
 - The Integral in a PID controller is the sum of the instantaneous error over time and gives the accumulated offset that should have been corrected previously. The accumulated error is then multiplied by the integral gain (`Ki`) and added to the controller output. In this project, our car is in a simulation, we can assume that the steering drift in our car can be ignored. And when I apply twiddle algorithm to find suitable hyparameters, set `Ki=0` can reduce a lot of calculations.
@@ -37,7 +37,7 @@ In this project, I used one PID controller to control the steering angle. And pr
 
 Here I will explain my steps to chose suitable hyperparameters.
 
-1. Manually select rough hyperparameters as the begining of twiddle algorithm. In this step, I selected `0.1, 0.0, 1,0`.
+1. Manually select rough hyperparameters as the begining of twiddle algorithm. In this step, I selected `0.15, 0.0, 3.0`.
 2. Set parameters of twiddle algorithm. In this step, I set `tolerance = 0.1`, `dp_[3] = {1.0, 0.0, 1.0}`.
 3. Apply twiddle algotiyhm, wait for the algorithm converge.
 
